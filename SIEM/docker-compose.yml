@@ -53,6 +53,12 @@ services:
       - ./config/wazuh_indexer_ssl_certs/wazuh.indexer.pem:/usr/share/wazuh-indexer/certs/wazuh.indexer.pem
       - ./config/wazuh_indexer_ssl_certs/admin.pem:/usr/share/wazuh-indexer/certs/admin.pem
       - ./config/wazuh_indexer_ssl_certs/admin-key.pem:/usr/share/wazuh-indexer/certs/admin-key.pem
+    healthcheck:
+      test: ["CMD-SHELL", "curl -skf -u admin:${INDEXER_PASSWORD} https://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
 
   wazuh.dashboard:
     image: wazuh/wazuh-dashboard:4.9.2
@@ -74,8 +80,8 @@ services:
       - ./config/wazuh_indexer_ssl_certs/wazuh.dashboard-key.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem
       - ./config/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-dashboard/certs/root-ca.pem
     depends_on:
-      - wazuh.indexer
-      - wazuh.manager
+      wazuh.indexer:
+        condition: service_healthy
 
 volumes:
   wazuh_api_configuration:
