@@ -53,7 +53,7 @@ Skopiuj plik szablonu `.env.example` do `.env` i uzupełnij własne klucze API (
 cp .env.example .env
 ```
 
-> **Uwaga dotycząca haseł:** Domyślnie obraz `wazuh-indexer:4.9.2` inicjuje bazę hasłami `SecretPassword` (użytkownik `admin`) oraz `kibanaserver` (użytkownik `kibanaserver`). Jeśli w pliku `.env` ustawisz własne hasła dla `INDEXER_PASSWORD` i `DASHBOARD_PASSWORD`, po pierwszym uruchomieniu stosu wykonaj komendę synchronizacji haseł z sekcji **Rozwiązywanie problemów** poniżej.
+> **Uwaga dotycząca haseł:** Domyślnie obraz `wazuh-indexer:4.9.2` inicjuje bazę hasłami `admin` (użytkownik `admin`) oraz `kibanaserver` (użytkownik `kibanaserver`). Jeśli w pliku `.env` ustawisz własne hasła dla `INDEXER_PASSWORD` i `DASHBOARD_PASSWORD`, po pierwszym uruchomieniu stosu wykonaj komendę synchronizacji haseł z sekcji **Rozwiązywanie problemów** poniżej.
 
 ### 2. Wygenerowanie certyfikatów SSL
 Certyfikaty nie są przechowywane w repozytorium. Przed pierwszym uruchomieniem wygeneruj je lokalnie:
@@ -75,7 +75,7 @@ docker compose ps
 ### 4. Dostęp do interfejsów
 * **Wazuh Dashboard:** `https://localhost` *(wymagane `https://`, zaakceptuj ostrzeżenie o samopodpisanym certyfikacie)*
   * Login: `admin`
-  * Hasło: wartość `INDEXER_PASSWORD` z pliku `.env`
+  * Hasło: `admin` (wartość `INDEXER_PASSWORD` z pliku `.env`)
 * **Wazuh Indexer (stan klastra):** `https://localhost:9200/_cluster/health?pretty`
 * **Wazuh Manager API:** `https://localhost:55000`
 
