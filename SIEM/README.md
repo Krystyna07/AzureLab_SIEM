@@ -59,7 +59,7 @@ cp .env.example .env
 Certyfikaty nie są przechowywane w repozytorium. Przed pierwszym uruchomieniem wygeneruj je lokalnie:
 
 ```bash
-docker run --rm -v ./config/certs.yml:/config/certs.yml -v ./config/wazuh_indexer_ssl_certs:/certificates wazuh/wazuh-certs-generator:0.0.2
+docker run --rm -u 0 --entrypoint bash -v ./config/certs.yml:/config/certs.yml -v ./config/wazuh_indexer_ssl_certs:/out wazuh/wazuh-certs-generator:0.0.2 -c "mkdir -p /certificates && /entrypoint.sh && chmod 644 /certificates/* && cp -f /certificates/* /out/"
 ```
 
 ### 3. Uruchomienie kontenerów
