@@ -112,3 +112,14 @@ EOF
 
 docker compose restart wazuh.dashboard wazuh.manager
 ```
+
+## Ważne uwagi i rozwiązywanie problemów (Troubleshooting)
+
+* **Kolejność uruchomienia ma znaczenie:** Zawsze najpierw utwórz plik `.env` (`cp .env.example .env`) i wygeneruj certyfikaty SSL w `config/wazuh_indexer_ssl_certs/`, a dopiero na końcu uruchom `docker compose up -d`.
+  * *Brak pliku `.env`:* spowoduje puste hasła i status `unhealthy` dla kontenera `wazuh.indexer`.
+  * *Uruchomienie `docker compose up -d` przed wygenerowaniem certyfikatów:* Docker utworzy puste katalogi w miejscu plików `.pem`/`.key`. W takiej sytuacji wykonaj `docker compose down -v`, usuń zawartość `config/wazuh_indexer_ssl_certs/`, wygeneruj certyfikaty ponownie i dopiero wtedy uruchom `docker compose up -d`.
+* **Błąd `ERR_CONNECTION_CLOSED` tuż po uruchomieniu:** Nawet gdy `docker compose ps` pokazuje stan `Up`, moduł `wazuh.dashboard` potrzebuje jeszcze ok. **60–90 sekund** na załadowanie wszystkich wtyczek. Jeśli przeglądarka zwróci `ERR_CONNECTION_CLOSED`, odczekaj minutę i odśwież **`https://localhost`** (`Ctrl + F5`).
+* **Restart komputera resetuje `vm.max_map_count`:** Po każdym ponownym uruchomieniu systemu przed startem kontenerów wykonaj ponownie:
+  * **Windows (PowerShell):** `wsl -d docker-desktop sysctl -w vm.max_map_count=262144`
+  * **Linux:** `sudo sysctl -w vm.max_map_count=262144`
+* **Dostęp i logowanie (`500 Internal Server Error` po resecie):** Otwórz **`https://localhost`** (z `https://`, akceptując lokalny certyfikat SSL) i zaloguj się danymi **`admin` / `admin`**. Jeśli po wcześniejszym `docker compose down -v` pojawi się błąd `500`, otwórz stronę w oknie prywatnym (Incognito) lub wyczyść ciasteczka dla `localhost`.
